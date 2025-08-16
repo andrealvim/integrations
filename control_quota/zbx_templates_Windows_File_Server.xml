@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>6.0</version>
+    <date>2025-06-17T02:21:16Z</date>
+    <groups>
+        <group>
+            <uuid>6b54fd28ab94497eb0d362b83a8c0717</uuid>
+            <name>Windows servers</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <uuid>5e6f048c0aa14959818b9c3e7ee026f1</uuid>
+            <template>Windows File Server</template>
+            <name>Windows File Server</name>
+            <groups>
+                <group>
+                    <name>Windows servers</name>
+                </group>
+            </groups>
+            <items>
+                <item>
+                    <uuid>01274b931668496b970b9ba142291699</uuid>
+                    <name>File quota full</name>
+                    <type>ZABBIX_ACTIVE</type>
+                    <key>check.quota</key>
+                    <delay>1h</delay>
+                    <history>30d</history>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <description>quota</description>
+                </item>
+            </items>
+            <discovery_rules>
+                <discovery_rule>
+                    <uuid>c50b84e0485840949d48a6e6370cf83d</uuid>
+                    <name>Discovery file path</name>
+                    <type>DEPENDENT</type>
+                    <key>discovery.path</key>
+                    <delay>0</delay>
+                    <lifetime>90d</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <uuid>0f350ac5d2404d1b95ab7d5e1eeacfeb</uuid>
+                            <name>Free Hard Limit - {#PATH}</name>
+                            <type>CALCULATED</type>
+                            <key>Free.[{#PATH}]</key>
+                            <delay>1h</delay>
+                            <trends>270d</trends>
+                            <value_type>FLOAT</value_type>
+                            <units>B</units>
+                            <params>(last(//size[{#PATH}])-last(//usage[{#PATH}]))</params>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>1730eb7471cc4a238d4ae0dc1abfd510</uuid>
+                            <name>Percentage Used Hard Limit - {#PATH}</name>
+                            <type>CALCULATED</type>
+                            <key>percentage.[{#PATH}]</key>
+                            <delay>1h</delay>
+                            <trends>270d</trends>
+                            <value_type>FLOAT</value_type>
+                            <units>%</units>
+                            <params>(last(//usage[{#PATH}])/last(//size[{#PATH}]))*100</params>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>4b3b644f96d340488834b203b2b5b554</uuid>
+                            <name>Size for {#PATH}</name>
+                            <type>DEPENDENT</type>
+                            <key>size[{#PATH}]</key>
+                            <delay>0</delay>
+                            <trends>270d</trends>
+                            <units>B</units>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <parameters>
+                                        <parameter>$.quota.[?(@.Path=='{#PATH}')].Size.first()</parameter>
+                                    </parameters>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>check.quota</key>
+                            </master_item>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>cbda2c39956d4123b865575f386b5134</uuid>
+                            <name>Usage for {#PATH}</name>
+                            <type>DEPENDENT</type>
+                            <key>usage[{#PATH}]</key>
+                            <delay>0</delay>
+                            <trends>270d</trends>
+                            <units>B</units>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <parameters>
+                                        <parameter>$.quota.[?(@.Path=='{#PATH}')].Usage.first()</parameter>
+                                    </parameters>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>check.quota</key>
+                            </master_item>
+                        </item_prototype>
+                    </item_prototypes>
+                    <trigger_prototypes>
+                        <trigger_prototype>
+                            <uuid>fce607dc18e64f6bafa3ca749306db91</uuid>
+                            <expression>last(/Windows File Server/percentage.[{#PATH}])&gt;=85 or  (last(/Windows File Server/Free.[{#PATH}]) &lt; 1073741824 and last(/Windows File Server/size[{#PATH}]) &gt; 5368709120)</expression>
+                            <name>Espaço livre na pasta {#PATH} menor que 15% ou menor que 1GB</name>
+                            <event_name>Espaço livre na pasta {#PATH} menor que 15% ou menor que 1GB</event_name>
+                            <priority>INFO</priority>
+                            <manual_close>YES</manual_close>
+                            <tags>
+                                <tag>
+                                    <tag>automação</tag>
+                                    <value>servico</value>
+                                </tag>
+                            </tags>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <uuid>13eb736502a547ad99cfb21ff44b5da7</uuid>
+                            <expression>last(/Windows File Server/percentage.[{#PATH}])&gt;=95 or (last(/Windows File Server/Free.[{#PATH}]) &lt; 536870912 and last(/Windows File Server/size[{#PATH}]) &gt; 5368709120)</expression>
+                            <name>Quota Hard Limit for {#PATH} &lt; 5% or 500MB</name>
+                            <priority>AVERAGE</priority>
+                            <tags>
+                                <tag>
+                                    <tag>automação</tag>
+                                    <value>servico</value>
+                                </tag>
+                            </tags>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <uuid>5761b95c844c482ead22f42c54f5fe26</uuid>
+                            <expression>last(/Windows File Server/percentage.[{#PATH}])&lt;=50 and last(/Windows File Server/size[{#PATH}])&gt; 4694967296</expression>
+                            <name>Quota Hard Limit for {#PATH} &lt; 50%</name>
+                            <priority>WARNING</priority>
+                            <tags>
+                                <tag>
+                                    <tag>automação</tag>
+                                    <value>servico</value>
+                                </tag>
+                            </tags>
+                        </trigger_prototype>
+                    </trigger_prototypes>
+                    <master_item>
+                        <key>check.quota</key>
+                    </master_item>
+                    <lld_macro_paths>
+                        <lld_macro_path>
+                            <lld_macro>{#PATH}</lld_macro>
+                            <path>$.Path</path>
+                        </lld_macro_path>
+                        <lld_macro_path>
+                            <lld_macro>{#SIZE}</lld_macro>
+                            <path>$.Size</path>
+                        </lld_macro_path>
+                        <lld_macro_path>
+                            <lld_macro>{#USAGE}</lld_macro>
+                            <path>$.Usage</path>
+                        </lld_macro_path>
+                    </lld_macro_paths>
+                    <preprocessing>
+                        <step>
+                            <type>JSONPATH</type>
+                            <parameters>
+                                <parameter>$.quota</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>

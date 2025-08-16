@@ -7,8 +7,8 @@ To simplify the script, the blocking period information is placed in the web pag
 
 ![ad-01.png](https://github.com/andrealvim/integrations/blob/main/Bloqueio_usuario_AD_automatico/ad-01.png?raw=true)
 
-
- However, if you want to use another field, simply adjust the "manage-user-ad.ps1" script on lines 25 and 34 (replace **-HomePage**  with the desired field ).
+> [!NOTE]
+> However, if you want to use another field, simply adjust the "manage-user-ad.ps1" script on lines 25 and 34 (replace **-HomePage**  with the desired field ).
 ```
 #executa o bloqueio de rede
 #execute network lock
