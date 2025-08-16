@@ -22,3 +22,6 @@ $path2 = Get-FsrmQuota -Path "C:\session\..." | Select Path,Size,Usage
 * The Grafana template is the **Quotas_file_Server.json** file.
 
 ![print-quota.png](https://github.com/andrealvim/integrations/blob/main/control_quota/print-quota.png?raw=true)
+
+> [!IMPORTANT]
+> I would like to thank Marcello Chapinoti for his support in developing this integration - Marcello_chapinotti@hotmail.com
