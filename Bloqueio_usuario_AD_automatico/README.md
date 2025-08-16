@@ -1,4 +1,4 @@
-#Automatically blocking users in Active Directory (AD)
+# Automatically blocking users in Active Directory (AD)
 
 If you need to block and unblock users within a specific period, this can be very costly when the user volume is high.
 To solve this problem, I created a PowerShell script that performs this function using a CSV user list.
@@ -18,7 +18,7 @@ Invoke-Expression "echo '$($name) - Desbloqueado de rede - fim $($fim)'" >> $log
 }
 ```
 
-![ad-01.png](https://github.com/andrealvim/integrations/tree/main/Bloqueio_usuario_AD_automatico/ad-01.png?raw=true)
+![ad-01.png](https://github.com/andrealvim/integrations/blob/main/Bloqueio_usuario_AD_automatico/ad-01.png?raw=true)
 
 
 - Crie a pasta c:\script
