@@ -1,2 +1,2 @@
 # Integrations
-## All integrations in this Repository have been tested.
+## All integrations in this repository have been tested.
